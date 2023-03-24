@@ -20,7 +20,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="employee in employees" :key="employee.id">
+            <tr v-for="employee in paginateData" :key="employee.id">
               <td>{{ employee.firtsName }}</td>
               <td>{{ employee.otherName }}</td>
               <td>{{ employee.firtsLastName }}</td>
@@ -32,6 +32,15 @@
             </tr>
           </tbody>
         </table>
+        <!-- pagination-->
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item" v-on:click="previusPage()"><a class="page-link" href="#">Atras</a></li>
+            <li v-for="(page,index) in allPages()" :key="index" v-on:click="getDataPage(page)" class="page-item"><a class="page-link" href="#">{{ page }}</a></li>
+            <li class="page-item" v-on:click="nextPage()"><a class="page-link" href="#">Siguiente</a></li>
+          </ul>
+        </nav>
+        <!--end pagination-->
       </div>
       
     </div>
@@ -42,12 +51,16 @@
 export default {
   data(){
       return{
-        employees:[]
+        employees:[],
+        elements:4,
+        paginateData:[],
+        actualPage:1
       }
     },
     created:function(){
-      this.consultEmployees();
+      this.consultEmployees(); 
     },
+    
     methods:{
       consultEmployees(){
         fetch('http://localhost/Emp_JVN/Backend/public/api/employee')
@@ -57,9 +70,11 @@ export default {
           this.empoyees=[]
           if(typeof responseData[0].success==='undefined'){
             this.employees=responseData;
+            this.getDataPage(1);
           }
         })
         .catch(console.log())
+        
       },
       employeeDelete(id){
         
@@ -72,6 +87,30 @@ export default {
           })
           .catch(console.log())
           }
+      },
+
+      //pagination
+      allPages(){
+        return Math.ceil(this.employees.length/this.elements);
+      },
+      getDataPage(numPage){
+        this.paginateData=[];
+        let start=(numPage * this.elements) - this.elements;
+        let end=(numPage * this.elements);
+
+        this.paginateData = this.employees.slice(start,end);
+      },
+      previusPage(){
+        if(this.actualPage > 1){
+          this.actualPage--;
+        }
+        this.getDataPage(this.actualPage);
+      },
+      nextPage(){
+        if(this.actualPage < this.allPages()){
+          this.actualPage++;
+        }
+        this,this.getDataPage(this.actualPage);
       }
     }
 }
