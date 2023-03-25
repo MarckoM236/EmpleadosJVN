@@ -6,7 +6,7 @@ Vue: 3<br>
 Laravel Framework 10.4.1
 
 ## Al clonar un proyecto desde GitHub:
-##Para el Backend (Laravel)
+## Para el Backend (Laravel)
 
 ### Ubicacion de la API
 Se podra copiar solo la ruta del Backend o el proyecto completo en un servidor apache.
