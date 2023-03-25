@@ -52,7 +52,7 @@ export default {
   data(){
       return{
         employees:[],
-        elements:4,
+        elements:10,
         paginateData:[],
         actualPage:1
       }
@@ -83,7 +83,12 @@ export default {
           .then(response=>response.json())
           .then((responseData)=>{
             console.log(responseData)
-            window.location.href='/'
+            let result = Object.values(responseData); // valores = ["Scott", "Negro", true, 5];
+            
+              alert(result[1]);
+              window.location.href='/'
+            
+      
           })
           .catch(console.log())
           }

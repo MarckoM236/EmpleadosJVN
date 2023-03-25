@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Helpers\MyHelper;
 use GuzzleHttp\Middleware;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
@@ -24,13 +25,19 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $request->validate([
+        $validator = Validator::make($request->all(), [
             'firtsName' => 'required|min:2|max:20|alpha|regex:/^[A-Za-z]+$/',
             'otherName' => 'max:50|alpha|regex:/^[A-Za-z]+$/',
             'firtsLastName' => 'required|min:2|max:20|regex:/^[A-Za-z\s]+$/',
             'country' => 'required'
         ]);
-        
+
+        if ($validator->fails()) {
+                $response['status']= 0;
+                $response['message']= $validator->errors();
+                $response['code']= 422;
+        }
+        else{
             $employee = new Employee();
             $employee->firtsName = $request->firtsName;
             $employee->otherName = $request->otherName;
@@ -49,11 +56,10 @@ class EmployeeController extends Controller
                 $response['message']= "No se pudo crear el registro";
                 $response['code']= 401;
             }
+        }
 
             return response()->json($response);
-            
-            
-            
+    
     }
 
     /**

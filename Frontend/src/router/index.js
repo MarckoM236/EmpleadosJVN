@@ -13,7 +13,7 @@ const routes = [
   
   {
     path: '/create',
-    name: 'Creaate',
+    name: 'Create',
     component: ComponentCreate
   },
   

@@ -2,6 +2,9 @@
   <div class="container">
 
         <div class="card">
+          <div v-if="resp.length !== 0" class="alert alert-danger" role="alert">
+            {{ resp }}
+          </div>
 
             <div class="card-header">
             Agregar Nuevo Empleado
@@ -59,7 +62,8 @@
 export default {
     data(){
       return{
-        employee:{}
+        employee:{},
+        resp:[]
       }
     },
     methods:{
@@ -77,7 +81,14 @@ export default {
         .then(response=>response.json())
         .then((responseData =>{
           console.log(responseData);
-          window.location.href='/'
+          let result = Object.values(responseData); // valores = ["Scott", "Negro", true, 5];
+          if(result[2]===201){
+          alert(result[1]);
+          window.location.href='/';
+          }
+          else{
+            this.resp=result[1];
+          }
         }))
       },
       cancelar(){
